@@ -8,7 +8,7 @@ show() {
     echo -e "\e[32m$1\e[0m"  # Green colored message
 }
 
-mkdir -p Eclipse && cd Eclipse
+cd Eclipse
 # Function to install Node.js, npm, Rust, and Solana
 install_all() {
     show "Installing Node.js and npm..."
