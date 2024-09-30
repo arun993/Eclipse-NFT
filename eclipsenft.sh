@@ -57,46 +57,6 @@ install_all() {
     fi
 }
 
-# Function to set up wallet
-setup_wallet() {
-    KEYPAIR_DIR="$HOME/solana_keypairs"
-    mkdir -p "$KEYPAIR_DIR"
-
-    show "Do you want to use an existing wallet or create a new one?"
-    PS3="Please enter your choice (1 or 2): "
-    options=("Use existing wallet" "Create new wallet")
-    select opt in "${options[@]}"; do
-        case $opt in
-            "Use existing wallet")
-                show "Recovering from existing wallet..."
-                KEYPAIR_PATH="$KEYPAIR_DIR/eclipse-wallet.json"
-                solana-keygen recover -o "$KEYPAIR_PATH" --force
-                if [[ $? -ne 0 ]]; then
-                    show "Failed to recover the existing wallet. Exiting."
-                    exit 1
-                fi
-                break
-                ;;
-            "Create new wallet")
-                show "Creating a new wallet..."
-                KEYPAIR_PATH="$KEYPAIR_DIR/eclipse-wallet.json"
-                solana-keygen new -o "$KEYPAIR_PATH" --force
-                if [[ $? -ne 0 ]]; then
-                    show "Failed to create a new wallet. Exiting."
-                    exit 1
-                fi
-                break
-                ;;
-            *) show "Invalid option. Please try again." ;;
-        esac
-    done
-
-    solana config set --keypair "$KEYPAIR_PATH"
-    show "Wallet setup completed!"
-
-    cp "$KEYPAIR_PATH" "$PWD"
-}
-
 
 create_and_install_dependencies() {
     # Remove existing package.json if available
@@ -204,7 +164,6 @@ mint() {
 show_menu() {
     echo -e "\n\e[34m===== Eclipse NFT Setup Menu =====\e[0m"
     echo "1) Install Node.js, Rust, and Solana"
-    echo "2) Set up Wallet"
     echo "3) Install npm dependencies"
     echo "4) Setup Mint File"
     echo "5) Start Minting"
